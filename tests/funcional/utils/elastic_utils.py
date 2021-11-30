@@ -32,7 +32,7 @@ class ESConnector:
         return self.connection.indices.exists(index=index)
 
     def create_index(self, index: str, file_name: str):
-        with open(f'../testdata/{file_name}', 'r') as f:
+        with open(f'testdata/{file_name}', 'r') as f:
             self.connection.indices.create(index=index, body=json.load(f))
             return self.connection.indices.get(index=index)
 
@@ -50,16 +50,13 @@ def create_indexes():
 def apply_fixtures():
     es_connect = ESConnector()
     for index, fixtures in fixtures_files.items():
-        with open(f'../testdata/{fixtures}', 'r') as f:
+        with open(f'testdata/{fixtures}', 'r') as f:
             es_connect.load(index=index, block=f.readlines())
 
 
-def remove_record():
-    pass
-
-
-def add_record():
-    pass
+def test_data_set():
+    create_indexes()
+    apply_fixtures()
 
 
 if __name__ == '__main__':
