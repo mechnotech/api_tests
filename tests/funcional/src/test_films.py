@@ -3,8 +3,6 @@ import pytest
 from .models import FilmStructure, ShortFilmStructure
 
 
-
-
 @pytest.mark.asyncio
 async def test_get_film_detail_by_id(make_get_request, restore_es):
     response = await make_get_request('film/317df96f-2cbc-48fd-98ba-16a94cac68a0')

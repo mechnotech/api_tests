@@ -1,8 +1,11 @@
 import json
+import os
 
 from elasticsearch import Elasticsearch
 
 from tests.funcional.settings import TestSettings
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 indexes_schemes = {
     'movies': 'movie_scheme_es.json',
@@ -32,7 +35,7 @@ class ESConnector:
         return self.connection.indices.exists(index=index)
 
     def create_index(self, index: str, file_name: str):
-        with open(f'testdata/{file_name}', 'r') as f:
+        with open(f'{dir_path}/../testdata/{file_name}', 'r') as f:
             self.connection.indices.create(index=index, body=json.load(f))
             return self.connection.indices.get(index=index)
 
@@ -50,7 +53,7 @@ def create_indexes():
 def apply_fixtures():
     es_connect = ESConnector()
     for index, fixtures in fixtures_files.items():
-        with open(f'testdata/{fixtures}', 'r') as f:
+        with open(f'{dir_path}/../testdata/{fixtures}', 'r') as f:
             es_connect.load(index=index, block=f.readlines())
 
 

@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import aiohttp
 import aioredis
@@ -24,19 +25,13 @@ class HTTPResponse:
 def restore_es():
     test_data_set()
 
-# @pytest.fixture(scope="session")
-# def event_loop():
-#     loop = asyncio.get_event_loop()
-#     yield loop
-#     loop.close()
-#     yield
 
 @pytest.fixture(scope='function')
 async def redis_clean():
     client = await aioredis.create_redis_pool(('127.0.0.1', 6379))
-    client.flushall()
-    yield client
-    client.close()
+    await client.flushall(async_op=True)
+    time.sleep(0.5)
+    yield client.close()
 
 
 @pytest.fixture(scope='function')
