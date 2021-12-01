@@ -24,17 +24,17 @@ async def test_page_lose_items(make_get_request):
 
 @pytest.mark.asyncio
 async def test_page_out_of_range(make_get_request):
-    responce = await make_get_request('film', params={'page[size]': 50, 'page[number]': 1000})
-    assert responce.status == 404, f'Ожидается 404, запрос вернул {responce.status}'
+    response = await make_get_request('film', params={'page[size]': 50, 'page[number]': 1000})
+    assert response.status == 404, f'Ожидается 404, запрос вернул {response.status}'
 
 
 @pytest.mark.asyncio
 async def test_page_zero_size(make_get_request):
-    responce = await make_get_request('film', params={'page[size]': 0, 'page[number]': 0})
-    assert responce.status == 404, f'Ожидается 404, запрос вернул {responce.status}'
+    response = await make_get_request('film', params={'page[size]': 0, 'page[number]': 0})
+    assert response.status == 404, f'Ожидается 404, запрос вернул {response.status}'
 
 
 @pytest.mark.asyncio
 async def test_page_wrong_params(make_get_request):
-    responce = await make_get_request('film', params={'page[size]': 'ten', 'page[number]': 'first'})
-    assert responce.status == 400, f'Ожидается 400 (Bad request), запрос вернул {responce.status}'
+    response = await make_get_request('film', params={'page[size]': 'ten', 'page[number]': 'first'})
+    assert response.status == 400, f'Ожидается 400 (Bad request), запрос вернул {response.status}'
