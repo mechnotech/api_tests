@@ -1,11 +1,11 @@
 import pytest
 
-from .models import Genre, ShortGenre
+from .models import Genre, ShortGenre, test_set
 
 
 @pytest.mark.asyncio
 async def test_genre_by_id(make_get_request):
-    response = await make_get_request('genre/3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff')
+    response = await make_get_request(f'genre/{test_set.genre_id}')
     assert response.status == 200, f'Ответ {response.status}, ожидался: 200'
     assert isinstance(response.body, dict), 'Ожидается dict в ответе'
     assert Genre(**response.body), 'Неправильная структура полей и/или типов в жанре'
@@ -13,9 +13,9 @@ async def test_genre_by_id(make_get_request):
 
 @pytest.mark.asyncio
 async def test_genre_cache(make_get_request, es_client, restore_es):
-    old_response = await make_get_request('genre/3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff')
-    await es_client.delete(index='genres', id='3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff')
-    response = await make_get_request('genre/3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff')
+    old_response = await make_get_request(f'genre/{test_set.genre_id}')
+    await es_client.delete(index='genres', id=test_set.genre_id)
+    response = await make_get_request(f'genre/{test_set.genre_id}')
     assert response.status == 200, f'Кэш redis не сработал! Ответ {response.status}, ожидался: 200'
     assert old_response == response, f'Кэш вернул не тот объект: {old_response} и {response}'
 
@@ -32,5 +32,5 @@ async def test_genres_list_all(make_get_request, restore_es):
 
 @pytest.mark.asyncio
 async def test_genre_404(make_get_request):
-    response = await make_get_request('genre/f0f0f0f-f0f0-f0f0-f0f0-f0f0f0f0f0f0')
+    response = await make_get_request(f'genre/{test_set.wrong_id}')
     assert response.status == 404, f'Ответ {response.status}, ожидался: 404'

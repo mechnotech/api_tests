@@ -57,10 +57,10 @@ def apply_fixtures():
             es_connect.load(index=index, block=f.readlines())
 
 
-def test_data_set():
+def apply_test_set():
     create_indexes()
     apply_fixtures()
 
 
 if __name__ == '__main__':
-    apply_fixtures()
+    apply_test_set()

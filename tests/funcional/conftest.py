@@ -1,15 +1,13 @@
-import asyncio
 import time
+from dataclasses import dataclass
 
 import aiohttp
 import aioredis
 import pytest
-
-from dataclasses import dataclass
-from multidict import CIMultiDictProxy
 from elasticsearch import AsyncElasticsearch
+from multidict import CIMultiDictProxy
 
-from .utils.elastic_utils import test_data_set
+from .utils.elastic_utils import apply_test_set
 
 SERVICE_URL = 'http://127.0.0.1:8000/api/v1/'
 
@@ -23,7 +21,7 @@ class HTTPResponse:
 
 @pytest.fixture(scope='function')
 def restore_es():
-    test_data_set()
+    apply_test_set()
 
 
 @pytest.fixture(scope='function')
