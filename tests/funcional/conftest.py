@@ -1,4 +1,7 @@
+import asyncio
+
 import aiohttp
+import aioredis
 import pytest
 
 from dataclasses import dataclass
@@ -15,6 +18,25 @@ class HTTPResponse:
     body: dict
     headers: CIMultiDictProxy[str]
     status: int
+
+
+@pytest.fixture(scope='function')
+def restore_es():
+    test_data_set()
+
+# @pytest.fixture(scope="session")
+# def event_loop():
+#     loop = asyncio.get_event_loop()
+#     yield loop
+#     loop.close()
+#     yield
+
+@pytest.fixture(scope='function')
+async def redis_clean():
+    client = await aioredis.create_redis_pool(('127.0.0.1', 6379))
+    client.flushall()
+    yield client
+    client.close()
 
 
 @pytest.fixture(scope='function')
@@ -44,8 +66,3 @@ def make_get_request(session):
             )
 
     return inner
-
-
-@pytest.fixture(scope='function')
-def restore_es():
-    test_data_set()

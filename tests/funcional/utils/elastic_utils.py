@@ -60,4 +60,4 @@ def test_data_set():
 
 
 if __name__ == '__main__':
-    pass
+    apply_fixtures()

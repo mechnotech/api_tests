@@ -1,10 +1,12 @@
+from typing import Optional
+
 from .common import AdvancedJsonModel
 
 
 class FilmShort(AdvancedJsonModel):
     id: str
     title: str
-    imdb_rating: float
+    imdb_rating: Optional[float]
 
 
 class Film(FilmShort):
