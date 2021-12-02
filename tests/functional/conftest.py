@@ -8,8 +8,9 @@ from elasticsearch import AsyncElasticsearch
 from multidict import CIMultiDictProxy
 
 from .utils.elastic_utils import apply_test_set
+from .settings import config
 
-SERVICE_URL = 'http://127.0.0.1:8000/api/v1/'
+SERVICE_URL = f'http://{config.api_host}:{config.api_port}/api/v1/'
 
 
 @dataclass
@@ -26,7 +27,7 @@ def restore_es():
 
 @pytest.fixture(scope='function')
 async def redis_clean():
-    client = await aioredis.create_redis_pool(('127.0.0.1', 6379))
+    client = await aioredis.create_redis_pool((config.redis_host, config.redis_port))
     await client.flushall(async_op=True)
     time.sleep(0.5)
     yield client.close()
@@ -34,7 +35,7 @@ async def redis_clean():
 
 @pytest.fixture(scope='function')
 async def es_client():
-    client = AsyncElasticsearch(hosts='127.0.0.1:9200')
+    client = AsyncElasticsearch(hosts=[f'{config.es_host}:{config.es_port}'])
     yield client
     await client.close()
 

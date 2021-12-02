@@ -3,7 +3,7 @@ import os
 
 from elasticsearch import Elasticsearch
 
-from tests.funcional.settings import TestSettings
+from ..settings import TestSettings
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 

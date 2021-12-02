@@ -1,37 +1,24 @@
-version: "3.6"
+version: "3.4"
 
 volumes:
   test_elastic_data:
     name: test_elastic_data
 
 services:
-  elasticsearch:
+  test_elasticsearch:
     image: elasticsearch:7.13.2
-    container_name: elasticsearch
+    container_name: test_elasticsearch
     restart: always
     environment:
      - discovery.type=single-node
      - bootstrap.memory_lock=true
      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9200:9200"
+#    ports:
+#      - "9200:9200"
     volumes:
      - test_elastic_data:/usr/share/elasticsearch/data
     networks:
-     - test
-
-  kibana:
-    image: kibana:7.13.4
-    container_name: test_kibana_dev
-    environment:
-      - discovery.type=single-node
-      - ELASTICSEARCH_URL=https://elasticsearch:9200
-    networks:
-     - test
-    ports:
-     - "5601:5601"
-    depends_on:
-     - elasticsearch
+     - test_net
 
   test_redis:
     image: redis:6.2.6-bullseye
@@ -39,28 +26,42 @@ services:
     restart: always
 #    volumes:
 #     - ./storage/redis/data:/data
-    ports:
-     - "6379:6379"
+#    ports:
+#     - "6379:6379"
+    depends_on:
+      - test_elasticsearch
     networks:
-     - test
+     - test_net
 
   test_api:
     build: ../../fast_api/src
     container_name: test_api
     restart: always
     env_file:
-      - .dev.env
-    ports:
-      - "8000:8000"
+      - .env
+#    ports:
+#      - "8000:8000"
     networks:
-      - test
+      - test_net
     depends_on:
       - test_redis
 
+  tests:
+    build: .
+    container_name: tests
+    env_file:
+      - .env
+    networks:
+      - test_net
+    depends_on:
+      - test_api
+    entrypoint: ./commands.sh
+
+#      bash -c "pwd && ls -hla
+#      && cd functional/
+#      && cd ..
+#      && pytest"
+
 networks:
-  test:
+  test_net:
     driver: bridge
-
-
-
-
