@@ -53,3 +53,21 @@ async def test_page_wrong_params(make_get_request):
     """
     response = await make_get_request('film', params={'page[size]': 'ten', 'page[number]': 'first'})
     assert response.status == 400, f'Ожидается 400 (Bad request), запрос вернул {response.status}'
+
+
+@pytest.mark.asyncio
+async def test_page_subzero_params(make_get_request):
+    """
+    Запрос с отрицательным int в параметрах запроса должен обрабатываться корректно
+    """
+    response = await make_get_request('film', params={'page[size]': -10, 'page[number]': -2})
+    assert response.status == 404, f'Ожидается 404, запрос вернул {response.status}'
+
+
+@pytest.mark.asyncio
+async def test_page_mad_size(make_get_request):
+    """
+    Запрос огромного размера страницы обрабатываться корректно
+    """
+    response = await make_get_request('film', params={'page[size]': 8000000, 'page[number]': 1})
+    assert response.status == 404, f'Ожидается 404, запрос вернул {response.status}'
