@@ -1,4 +1,3 @@
-import time
 from dataclasses import dataclass
 
 import aiohttp
@@ -27,8 +26,7 @@ def restore_es():
 async def redis_clean():
     client = await aioredis.create_redis_pool((config.redis_host, config.redis_port))
     await client.flushall(async_op=True)
-    #time.sleep(0.5)
-    yield client.close()
+    client.close()
 
 
 @pytest.fixture(scope='function')

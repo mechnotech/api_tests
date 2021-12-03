@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 from elasticsearch import Elasticsearch
 
@@ -58,8 +59,16 @@ def apply_fixtures():
 
 
 def apply_test_set():
+    """
+    К пустой тестовой ES применяем тестируемые индексы
+    и набор данных. Так-как набор тестовых данных сравнительно большой,
+    желательна задержка. Так-как ответ ES не означает, что изменения
+    применены уже, а лишь то, что они будут приняты к применению.
+    :return:
+    """
     create_indexes()
     apply_fixtures()
+    time.sleep(0.2)
 
 
 if __name__ == '__main__':

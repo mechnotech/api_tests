@@ -4,7 +4,6 @@ from .common import AdvancedJsonModel
 
 
 class FilmShort(AdvancedJsonModel):
-    id: str
     title: str
     imdb_rating: Optional[float]
 

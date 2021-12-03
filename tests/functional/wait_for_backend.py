@@ -20,7 +20,6 @@ def ping_redis():
     my_logger.info('=================== Redis ready =====================')
 
 
-
 @backoff(logy=my_logger)
 def ping_es():
     my_logger.info(f'--------------- Connecting ES HOST={config.es_host} ---------------------')
