@@ -6,13 +6,16 @@
 
 #### Настройка окружения:
 ```
-cd test/functional
+git clone git@github.com:mechnotech/api_tests
+cd api_tests/
 python3 -m venv venv
 source venv/bin/activate
+cd tests/functional
+pip install -r requirements.txt
 ```
 cоздаём файл **.env** по примеру **.env.example** в той же директории
 
-(для данной сборки просто скопировать и переименовать *)
+(для данной сборки просто cp .env.example .env *)
 
 
 #### Запуск тестов:
@@ -58,7 +61,9 @@ cd tests/functional
 python3 wait_for_backend.py
 pytest
 ```
-будет ошибка файл или директория не найдена! Да вот так, ls показывает что директория есть, а пройти в ёё поддиректорию невозможно. Рабочий вариант:
+будет ошибка файл или директория не найдена! Да вот так, ls показывает что директория есть, а пройти в ёё поддиректорию невозможно. 
+
+Рабочий вариант:
 ```
 #!/bin/bash
 cd tests
