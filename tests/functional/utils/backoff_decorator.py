@@ -37,7 +37,7 @@ def backoff(
                     break
 
                 except Exception:
-                    logy.exception(f'Connection failed, reconnection attempt #{counter}, wait time - {t} sec')
+                    logy.warning(f'Connection failed, reconnection attempt #{counter}, wait time - {t} sec')
                     if t < border_sleep_time:
                         t = t * 2 ** factor
                     if t >= border_sleep_time:

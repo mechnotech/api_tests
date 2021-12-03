@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.6"
 
 volumes:
   test_elastic_data:
@@ -13,8 +13,7 @@ services:
      - discovery.type=single-node
      - bootstrap.memory_lock=true
      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    ports:
-#      - "9200:9200"
+
     volumes:
      - test_elastic_data:/usr/share/elasticsearch/data
     networks:
@@ -24,12 +23,6 @@ services:
     image: redis:6.2.6-bullseye
     container_name: test_redis
     restart: always
-#    volumes:
-#     - ./storage/redis/data:/data
-#    ports:
-#     - "6379:6379"
-    depends_on:
-      - test_elasticsearch
     networks:
      - test_net
 
@@ -39,8 +32,6 @@ services:
     restart: always
     env_file:
       - .env
-#    ports:
-#      - "8000:8000"
     networks:
       - test_net
     depends_on:
@@ -54,13 +45,9 @@ services:
     networks:
       - test_net
     depends_on:
-      - test_api
+      - test_elasticsearch
     entrypoint: ./commands.sh
 
-#      bash -c "pwd && ls -hla
-#      && cd functional/
-#      && cd ..
-#      && pytest"
 
 networks:
   test_net:

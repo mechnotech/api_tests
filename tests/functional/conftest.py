@@ -8,9 +8,7 @@ from elasticsearch import AsyncElasticsearch
 from multidict import CIMultiDictProxy
 
 from .utils.elastic_utils import apply_test_set
-from .settings import config
-
-SERVICE_URL = f'http://{config.api_host}:{config.api_port}/api/v1/'
+from .settings import config, SERVICE_URL
 
 
 @dataclass
@@ -29,7 +27,7 @@ def restore_es():
 async def redis_clean():
     client = await aioredis.create_redis_pool((config.redis_host, config.redis_port))
     await client.flushall(async_op=True)
-    time.sleep(0.5)
+    #time.sleep(0.5)
     yield client.close()
 
 
