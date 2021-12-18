@@ -30,7 +30,7 @@ class ESConnector:
 
     def load(self, index: str, block: list):
         body = ''.join(block)
-        self.connection.bulk(body=body, index=index, params={'filter_path': 'items.*.error'})
+        self.connection.bulk(body=body, index=index, params={'filter_path': 'items.*.error'}, refresh=True)
 
     def is_index_exist(self, index: str):
         return self.connection.indices.exists(index=index)
@@ -64,11 +64,12 @@ def apply_test_set():
     и набор данных. Набор тестовых данных сравнительно большой, поэтому
     желательна задержка, так-как ответ ES не означает, что изменения
     применены уже, а лишь то, что они будут приняты к применению.
+    Либо применить refresh=True в bulk ES
     :return:
     """
     create_indexes()
     apply_fixtures()
-    time.sleep(0.5)
+
 
 
 if __name__ == '__main__':
